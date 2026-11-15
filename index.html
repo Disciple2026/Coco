@@ -562,6 +562,27 @@ a { color: inherit; }
     to { transform: translateX(200%) rotate(45deg); }
 }
 
+/* ---------- Credit ---------- */
+.credit {
+    position: fixed;
+    left: 50%;
+    bottom: 1.1rem;
+    transform: translateX(-50%);
+    z-index: 160;
+    font-size: 0.78rem;
+    color: var(--muted-color);
+    text-decoration: none;
+    white-space: nowrap;
+    padding: 0.35rem 0.9rem;
+    border-radius: 100px;
+    background: rgba(0, 0, 0, 0.28);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+.credit strong { color: #fff; font-weight: 600; }
+.credit:hover { background: rgba(0, 0, 0, 0.55); color: #fff; }
+
 .sr-only {
     position: absolute; width: 1px; height: 1px; overflow: hidden;
     clip: rect(0 0 0 0); white-space: nowrap;
@@ -589,13 +610,13 @@ a { color: inherit; }
     .description { font-size: 0.86rem; line-height: 1.45; max-width: 13.5rem; }
     .award-badge { display: none; }
 
-    .main-product-3d { width: 100vw; height: 45vh; height: 45dvh; top: 52%; transform: translate(-50%, -50%) rotate(12deg); }
+    .main-product-3d { width: 100vw; height: 43vh; height: 43dvh; top: 49%; transform: translate(-50%, -50%) rotate(12deg); }
 
     .hero-right { display: block; width: auto; height: auto; padding: 0; }
     .side-title { display: none; }
     .product-carousel {
         position: fixed; left: 0; right: 0;
-        bottom: calc(9.9rem + env(safe-area-inset-bottom));
+        bottom: calc(11.7rem + env(safe-area-inset-bottom));
         align-items: center; z-index: 150;
     }
     .carousel-nav { display: none; }
@@ -610,8 +631,13 @@ a { color: inherit; }
 
     .cta-group {
         position: fixed; left: 5%; right: 5%;
-        bottom: calc(1rem + env(safe-area-inset-bottom));
+        bottom: calc(2.8rem + env(safe-area-inset-bottom));
         align-items: stretch; gap: 0.7rem; z-index: 150;
+    }
+    .credit {
+        bottom: calc(0.55rem + env(safe-area-inset-bottom));
+        font-size: 0.7rem; padding: 0.25rem 0.7rem; background: none;
+        backdrop-filter: none; -webkit-backdrop-filter: none;
     }
     .formats { gap: 0.4rem; }
     .format { flex: 1; min-width: 0; padding: 0.5rem 0.4rem; background: rgba(0, 0, 0, 0.28); }
@@ -629,7 +655,7 @@ a { color: inherit; }
 
 @media (max-width: 900px) and (max-height: 640px) {
     .description { display: none; }
-    .main-product-3d { height: 46vh; top: 44%; }
+    .main-product-3d { height: 40vh; top: 42%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -776,6 +802,10 @@ a { color: inherit; }
 
     </div>
 </main>
+
+<a class="credit" href="https://wa.me/212777822868?text=Bonjour%20Zo%C3%A9%20Studio%2C%20j%27ai%20vu%20le%20site%20Coco.P%20Infusion%20et%20je%20voudrais%20vous%20contacter." target="_blank" rel="noopener">
+    By <strong>Zoé Studio</strong> · Contact : +212 777 822868
+</a>
 
 <svg style="position: absolute; width: 0; height: 0; opacity: 0; pointer-events: none;" aria-hidden="true">
     <filter id="frosted">
