@@ -1093,7 +1093,10 @@ allBerries.forEach(b => {
 let mouse = { x: 0, y: 0, px: -9999, py: -9999 };
 let currentMouse = { x: 0, y: 0 };
 
-window.addEventListener('mousemove', (e) => {
+// Real mouse only: a tap on a phone also fires a fake mouse move, which must not
+// be mistaken for a cursor (it used to freeze the tilt after the first tap)
+window.addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse') return;
     mouse.x = (e.clientX / window.innerWidth) - 0.5;
     mouse.y = (e.clientY / window.innerHeight) - 0.5;
     mouse.px = e.clientX;
@@ -1113,28 +1116,76 @@ window.addEventListener('touchstart', onTouch, { passive: true });
 window.addEventListener('touchmove', onTouch, { passive: true });
 window.addEventListener('touchend', () => { mouse.px = -9999; mouse.py = -9999; mouse.x = 0; mouse.y = 0; }, { passive: true });
 
-// Tilting the phone tilts the bottle
-let tiltActive = false;
+// Tilting the phone tilts the bottle and slides the floating elements
+let motionActive = false;
+let fingerDown = false;
+window.addEventListener('touchstart', () => { fingerDown = true; }, { passive: true });
+window.addEventListener('touchend', () => { fingerDown = false; }, { passive: true });
+window.addEventListener('touchcancel', () => { fingerDown = false; }, { passive: true });
+
 function onTilt(e) {
     if (e.gamma === null || e.beta === null) return;
-    if (mouse.px > -9000) return; // a finger is down: it wins
-    mouse.x = Math.max(-0.5, Math.min(0.5, e.gamma / 60));
-    mouse.y = Math.max(-0.5, Math.min(0.5, (e.beta - 45) / 70));
+    if (fingerDown) return; // a finger is down: it wins
+    mouse.x = Math.max(-0.5, Math.min(0.5, e.gamma / 40));
+    mouse.y = Math.max(-0.5, Math.min(0.5, (e.beta - 45) / 50));
 }
-function enableTilt() {
-    if (tiltActive || !('DeviceOrientationEvent' in window)) return;
-    const start = () => { tiltActive = true; window.addEventListener('deviceorientation', onTilt); };
-    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-        DeviceOrientationEvent.requestPermission().then(state => { if (state === 'granted') start(); }).catch(() => {});
-    } else {
-        start();
+
+// Shaking the phone scatters the floating elements, wobbles the bottle and releases bubbles
+let lastAccel = null;
+let lastShake = 0;
+function onMotion(e) {
+    const a = e.accelerationIncludingGravity;
+    if (!a || a.x === null) return;
+    if (lastAccel) {
+        const delta = Math.abs(a.x - lastAccel.x) + Math.abs(a.y - lastAccel.y) + Math.abs(a.z - lastAccel.z);
+        if (delta > 22 && Date.now() - lastShake > 900) {
+            lastShake = Date.now();
+            shake();
+        }
     }
+    lastAccel = { x: a.x, y: a.y, z: a.z };
 }
-if (isSmall && !reducedMotion) {
-    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-        window.addEventListener('click', enableTilt, { once: true }); // iOS asks on a tap
+function shake() {
+    if (isSwitching) return;
+    document.querySelectorAll('.berry').forEach(berry => {
+        berry.dataset.rx = (Math.random() - 0.5) * 240;
+        berry.dataset.ry = (Math.random() - 0.5) * 240;
+    });
+    const wob = { t: 0 };
+    gsap.to(wob, {
+        t: 1, duration: 1.1, ease: 'none',
+        onUpdate: () => { if (!isSwitching) switchSpin = Math.sin(wob.t * Math.PI * 5) * 28 * (1 - wob.t); },
+        onComplete: () => { if (!isSwitching) switchSpin = 0; }
+    });
+    for (let i = 0; i < 14; i++) setTimeout(createBubble, i * 40);
+}
+
+function startMotion() {
+    if (motionActive) return;
+    motionActive = true;
+    window.addEventListener('deviceorientation', onTilt);
+    window.addEventListener('devicemotion', onMotion);
+}
+// iOS only hands out motion data after a tap and a system prompt; Android gives it straight away
+function enableMotion(onFail) {
+    const O = window.DeviceOrientationEvent, M = window.DeviceMotionEvent;
+    const asks = [];
+    if (O && typeof O.requestPermission === 'function') asks.push(O.requestPermission());
+    if (M && typeof M.requestPermission === 'function') asks.push(M.requestPermission());
+    if (!asks.length) { startMotion(); return; }
+    Promise.all(asks).then(states => { if (states.includes('granted')) startMotion(); }).catch(() => { if (onFail) onFail(); });
+}
+const hasTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+if (hasTouch && !reducedMotion && window.DeviceOrientationEvent) {
+    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+        // asked on the first tap; if iOS refuses that tap as a gesture, the next tap asks again
+        const ask = () => {
+            window.removeEventListener('click', ask);
+            enableMotion(() => window.addEventListener('click', ask));
+        };
+        window.addEventListener('click', ask);
     } else {
-        enableTilt();
+        enableMotion();
     }
 }
 
