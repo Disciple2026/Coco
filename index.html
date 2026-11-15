@@ -13,6 +13,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=Inter:wght@400;500;600;700&family=Manrope:wght@400;700&family=Galada&display=swap" rel="stylesheet">
+<link rel="preload" href="assets/bouteille_1l.glb" as="fetch" crossorigin>
+<link rel="preload" href="assets/bidon_5l.glb" as="fetch" crossorigin>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <script type="module" src="https://unpkg.com/@google/model-viewer@4.0.0/dist/model-viewer.min.js"></script>
 <style>
@@ -748,7 +750,7 @@ a { color: inherit; }
         <div class="hero-center">
             <model-viewer id="product-model" src="assets/bouteille_coco_p.glb" alt="Bouteille de bissap Coco.P Infusion en 3D"
                 shadow-intensity="0" environment-image="neutral" exposure="1.25" loading="eager"
-                interaction-prompt="none" camera-orbit="0deg 90deg 380%" field-of-view="30deg"
+                interaction-prompt="none" camera-orbit="0deg 90deg 440%" field-of-view="30deg"
                 class="main-product-3d">
             </model-viewer>
         </div>
@@ -819,14 +821,17 @@ a { color: inherit; }
     <model-viewer src="assets/menthe.glb"></model-viewer>
     <model-viewer src="assets/gingembre.glb"></model-viewer>
     <model-viewer src="assets/ananas.glb"></model-viewer>
+    <model-viewer src="assets/bouteille_1l.glb"></model-viewer>
+    <model-viewer src="assets/bidon_5l.glb"></model-viewer>
 </div>
 
 <script>
 const WHATSAPP = '212656736797';
+// Each format has its own 3D bottle; a larger orbit radius makes the bottle look smaller
 const FORMATS = [
-    { size: '0,5 L', price: 10 },
-    { size: '1 L', price: 17 },
-    { size: '5 L', price: 80 }
+    { size: '0,5 L', price: 10, model: 'assets/bouteille_coco_p.glb', radius: 440 },
+    { size: '1 L', price: 17, model: 'assets/bouteille_1l.glb', radius: 390 },
+    { size: '5 L', price: 80, model: 'assets/bidon_5l.glb', radius: 330 }
 ];
 const FLAVORS = {
     nature: {
@@ -870,6 +875,7 @@ let isSwitching = false;
 let switchSpin = 0;
 let currentFlavor = 'nature';
 let currentFormat = 0;
+let currentRadius = FORMATS[0].radius;
 
 function modelFor(flavor, i) {
     const list = FLAVORS[flavor].models;
@@ -881,8 +887,9 @@ function applyLiquid(flavor) {
     if (!modelViewer.model) return;
     const f = FLAVORS[flavor];
     modelViewer.model.materials.forEach(material => {
-        if (material.name === 'Liquide') material.pbrMetallicRoughness.setBaseColorFactor(f.liquid);
-        if (material.name === 'Mousse') material.pbrMetallicRoughness.setBaseColorFactor(f.foam);
+        const name = material.name.split('.')[0];
+        if (name === 'Liquide') material.pbrMetallicRoughness.setBaseColorFactor(f.liquid);
+        if (name === 'Mousse') material.pbrMetallicRoughness.setBaseColorFactor(f.foam);
     });
 }
 
@@ -919,11 +926,59 @@ document.getElementById('next-flavor').addEventListener('click', () => {
 
 formatBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-        currentFormat = Number(btn.dataset.format);
+        const next = Number(btn.dataset.format);
+        if (isSwitching || next === currentFormat) return;
+        currentFormat = next;
         formatBtns.forEach(b => b.classList.toggle('active', b === btn));
         updateOrder();
+        switchFormat(next);
     });
 });
+
+// Bottle spin: 360 with blur, onPeak at full blur, then settle with a back ease
+function spinBottle(onPeak, onDone) {
+    const spinObj = { val: 0, blur: 0 };
+    const apply = () => {
+        switchSpin = spinObj.val;
+        modelViewer.style.filter = `blur(${spinObj.blur}px)`;
+    };
+    gsap.to(spinObj, {
+        val: 360,
+        blur: reducedMotion ? 0 : 15,
+        duration: 0.6,
+        ease: "power2.in",
+        onUpdate: apply,
+        onComplete: () => {
+            if (onPeak) onPeak();
+            gsap.to(spinObj, {
+                val: 720,
+                blur: 0,
+                duration: 1.5,
+                ease: "back.out(0.7)",
+                onUpdate: apply,
+                onComplete: () => {
+                    switchSpin = 0;
+                    modelViewer.style.filter = 'none';
+                    if (onDone) onDone();
+                }
+            });
+        }
+    });
+}
+
+// Format change: same spin, the bottle model is swapped at the peak
+function switchFormat(index) {
+    isSwitching = true;
+    const fmt = FORMATS[index];
+    const radiusObj = { val: currentRadius };
+    spinBottle(() => {
+        modelViewer.src = fmt.model; // the 'load' listener recolours the juice
+        gsap.to(radiusObj, {
+            val: fmt.radius, duration: 1.2, ease: 'power2.out',
+            onUpdate: () => { currentRadius = radiusObj.val; }
+        });
+    }, () => { isSwitching = false; });
+}
 
 function switchFlavor(flavor) {
     if (isSwitching) return;
@@ -956,37 +1011,8 @@ function switchFlavor(flavor) {
         }
     });
 
-    // 2. Bottle Spin Animation (360 spin + blur, colour swap at the peak, back settle)
-    const spinObj = { val: 0, blur: 0 };
-    gsap.to(spinObj, {
-        val: 360,
-        blur: reducedMotion ? 0 : 15,
-        duration: 0.6,
-        ease: "power2.in",
-        onUpdate: () => {
-            switchSpin = spinObj.val;
-            modelViewer.style.filter = `blur(${spinObj.blur}px)`;
-        },
-        onComplete: () => {
-            // SWAP at peak
-            applyLiquid(flavor);
-
-            gsap.to(spinObj, {
-                val: 720,
-                blur: 0,
-                duration: 1.5,
-                ease: "back.out(0.7)",
-                onUpdate: () => {
-                    switchSpin = spinObj.val;
-                    modelViewer.style.filter = `blur(${spinObj.blur}px)`;
-                },
-                onComplete: () => {
-                    switchSpin = 0;
-                    modelViewer.style.filter = 'none';
-                }
-            });
-        }
-    });
+    // 2. Bottle Spin Animation (colour swap at the peak)
+    spinBottle(() => applyLiquid(flavor));
 
     // 3. Floating elements "Hide & Reveal" with Dynamic Positioning
     let completedBerries = 0;
@@ -1119,7 +1145,7 @@ function animate() {
     currentMouse.y += (mouse.y - currentMouse.y) * 0.05;
 
     // Tilt the bottle + add switch spin
-    modelViewer.cameraOrbit = `${(currentMouse.x * 40) + switchSpin}deg ${90 + (currentMouse.y * 20)}deg 380%`;
+    modelViewer.cameraOrbit = `${(currentMouse.x * 40) + switchSpin}deg ${90 + (currentMouse.y * 20)}deg ${currentRadius}%`;
 
     // Update parallax containers - Always
     const par = isSmall ? 0.4 : 1;
