@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Coco.P Infusion | Bissap et gnamakou à Tanger</title>
+<meta name="description" content="Bissap nature, bissap menthe et gnamakou (gingembre, ananas) faits maison. Livraison gratuite à Tanger. Commande sur WhatsApp.">
+<meta property="og:title" content="Coco.P Infusion | Bissap et gnamakou à Tanger">
+<meta property="og:description" content="Bissap et gnamakou faits maison, livrés gratuitement à Tanger. Commande sur WhatsApp.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#6b0a22">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%236b0a22'/%3E%3Cpath d='M16 6c4 5 6 8 6 12a6 6 0 0 1-12 0c0-4 2-7 6-12z' fill='%23fbcfe8'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=Inter:wght@400;500;600;700&family=Manrope:wght@400;700&family=Galada&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script type="module" src="https://unpkg.com/@google/model-viewer@4.0.0/dist/model-viewer.min.js"></script>
+<style>
+:root {
+    --bg-color: #0a0a0a;
+    --text-color: #ffffff;
+    --accent-color: #ffffff;
+    --muted-color: rgba(255, 255, 255, 0.78);
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --font-main: 'Inter', sans-serif;
+    --font-heading: 'Galada', cursive;
+    --pink: #fbcfe8;
+    --on-pink: #2a0510;
+
+    /* Dynamic Background Variables (Bissap nature by default) */
+    --bg-inner: #b3123a;
+    --bg-mid: #6b0a22;
+    --bg-outer: #1c0309;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: radial-gradient(circle at center, var(--bg-inner) 0%, var(--bg-mid) 50%, var(--bg-outer) 100%);
+    color: var(--text-color);
+    font-family: var(--font-main);
+    overflow: hidden; /* Remove scroll */
+    height: 100vh;
+    height: 100dvh;
+    transition: background 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    -webkit-tap-highlight-color: transparent;
+}
+
+button { font-family: inherit; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; }
+
+/* ---------- Bubbles ---------- */
+#bubbles-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.bubble-img {
+    position: absolute;
+    pointer-events: none;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    background: radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.12) 22%, rgba(255, 255, 255, 0.02) 60%, rgba(255, 255, 255, 0.14) 100%);
+}
+
+@keyframes floatUpImg {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+        opacity: 0;
+    }
+    10% { opacity: 0.4; }
+    90% { opacity: 0.4; }
+    100% {
+        transform: translateY(-110vh) translateX(30px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* ---------- Header ---------- */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 4%;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 200;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    font-size: 1.35rem;
+    font-family: var(--font-heading);
+}
+
+.nav {
+    display: flex;
+    gap: 0.5rem;
+    background: var(--glass-bg);
+    padding: 0.4rem;
+    border-radius: 100px;
+    border: 1px solid var(--glass-border);
+}
+
+.nav.glass {
+    position: relative;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.nav-item {
+    font-family: 'Manrope', sans-serif;
+    color: var(--muted-color);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.5rem 1.2rem;
+    border-radius: 100px;
+    transition: all 0.3s ease;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    background: var(--pink);
+    color: var(--on-pink);
+}
+
+.contact-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 0.9rem 1.6rem;
+    border-radius: 100px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: none;
+}
+
+.contact-btn:hover {
+    background: rgba(0, 0, 0, 0.7);
+    transform: translateY(-2px);
+    box-shadow: none;
+}
+
+/* ---------- Hero ---------- */
+.hero {
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4%;
+    padding-top: 5rem;
+}
+
+.hero-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch; /* Stretch columns to full height */
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    height: 100%;
+    position: relative;
+}
+
+/* Typography */
+.main-title,
+.side-title {
+    font-family: var(--font-heading);
+    font-size: clamp(5rem, 10vw, 12rem);
+    line-height: 0.8;
+    font-weight: 400;
+    text-transform: none;
+    white-space: nowrap;
+    color: white;
+    letter-spacing: normal;
+}
+
+.main-title { font-size: clamp(4.5rem, 9vw, 10.5rem); }
+.side-title { font-size: clamp(4rem, 7.5vw, 9rem); }
+
+.outline {
+    color: var(--text-color);
+}
+
+/* Floating leaves (far background) */
+.leaves-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1; /* Even further behind */
+    transition: transform 0.1s ease-out;
+}
+
+.leaf {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    pointer-events: none;
+    z-index: -1;
+    --progress-bar-color: transparent;
+    --poster-color: transparent;
+    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
+}
+
+.l1 { top: 10%; left: 15%; }
+.l2 { top: 40%; left: 80%; width: 140px; height: 140px; opacity: 0.85; }
+.l3 { top: 70%; left: 75%; width: 80px; height: 80px; }
+.l4 { top: 85%; left: 20%; width: 120px; height: 120px; opacity: 0.8; }
+
+/* Left column */
+.hero-left {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 6rem 0 4rem;
+    gap: 1.6rem;
+    z-index: 100;
+    max-width: 460px;
+}
+
+@keyframes fadeInEntry {
+    to { opacity: 1; transform: none; }
+}
+
+.description {
+    color: var(--muted-color);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    max-width: 400px;
+}
+
+.description strong { color: #fff; font-weight: 600; }
+
+.cta-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.formats {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.format {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.1rem;
+    min-width: 76px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 0.55rem 0.9rem;
+    border-radius: 18px;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.format .size { font-weight: 700; font-size: 0.95rem; }
+.format .price { font-size: 0.75rem; color: var(--muted-color); }
+.format:hover { background: rgba(255, 255, 255, 0.16); }
+.format.active { background: var(--pink); border-color: var(--pink); color: var(--on-pink); }
+.format.active .price { color: var(--on-pink); }
+
+.primary-btn {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 0.4rem 0.4rem 0.4rem 1.5rem;
+    border-radius: 100px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    width: fit-content;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: none;
+}
+
+.primary-btn:hover {
+    background: rgba(0, 0, 0, 0.7);
+    transform: translateY(-3px);
+    box-shadow: none;
+}
+
+.primary-btn .btn-label small {
+    display: block;
+    font-weight: 500;
+    font-size: 0.72rem;
+    color: var(--muted-color);
+    margin-top: 0.1rem;
+}
+
+.plus-icon {
+    background: var(--pink);
+    color: var(--on-pink);
+    width: 42px;
+    height: 42px;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: none;
+}
+
+.award-badge {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: auto; /* Push to bottom */
+}
+
+.award-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.award-text { display: flex; flex-direction: column; }
+.award-title { font-size: 0.7rem; letter-spacing: 0.1em; color: var(--muted-color); }
+.award-subtitle { font-size: 0.85rem; font-weight: 600; }
+
+/* Center product */
+.hero-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeIn 1.5s ease-out 0.3s forwards, float 6s ease-in-out infinite;
+    pointer-events: none;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.07) 0%, transparent 70%);
+}
+
+@keyframes fadeIn { to { opacity: 1; } }
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+.main-product-3d {
+    width: 80vw;
+    height: 80vh;
+    outline: none;
+    --progress-bar-color: transparent;
+    --poster-color: transparent;
+    z-index: 1;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(18deg);
+    pointer-events: none;
+}
+
+/* Berries */
+.berries-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 110; /* Above text (100) and bottle (50) */
+    transition: transform 0.1s ease-out;
+}
+
+.berries-container-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0; /* Behind everything */
+    transition: transform 0.1s ease-out;
+}
+
+.berry {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    outline: none;
+    --progress-bar-color: transparent;
+    --poster-color: transparent;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.berry.no-animation { animation: none !important; }
+
+.b1 { top: 25%; left: 30%; width: 220px; height: 220px; }
+.b2 { top: 60%; left: 42%; width: 100px; height: 100px; }
+.b3 { top: 37%; left: 56%; width: 230px; height: 230px; }
+.b4 { top: 15%; left: 48%; width: 140px; height: 140px; }
+.b5 { top: 75%; left: 20%; width: 120px; height: 120px; }
+.b6 { top: 45%; left: 75%; width: 180px; height: 180px; }
+.b7 { top: 15%; left: 40%; width: 80px; height: 80px; opacity: 0.7; }
+.b8 { top: 50%; left: 55%; width: 70px; height: 70px; opacity: 0.6; }
+.b9 { top: 80%; left: 35%; width: 75px; height: 75px; opacity: 0.7; }
+
+/* Right column */
+.hero-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+    text-align: right;
+    height: 100%;
+    padding: 6rem 0 4rem;
+    z-index: 100;
+    width: 450px;
+    pointer-events: none;
+}
+
+@keyframes fadeInLeft {
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.product-carousel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: flex-end;
+    pointer-events: auto; /* Enable interaction */
+}
+
+.carousel-cards { display: flex; gap: 1rem; }
+
+.card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: #fff;
+    padding: 1rem 0.6rem;
+    padding-top: 5rem;
+    border-radius: 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    width: 128px;
+    position: relative;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    text-align: center;
+}
+
+.card:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.card.active {
+    border-color: var(--pink);
+    border-width: 1px;
+    background: var(--glass-bg);
+    box-shadow: none;
+}
+
+.card img {
+    height: 170px;
+    width: auto;
+    margin-top: -7.2rem;
+    filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.5));
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+    display: block;
+    will-change: transform;
+    pointer-events: none; /* Mouse passes through image to trigger card hover */
+}
+
+.card:hover img {
+    transform: translateY(-22px) rotate(-10deg) scale(1.1) !important;
+}
+
+.card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    font-size: 0.72rem;
+    width: 100%;
+    word-wrap: break-word;
+}
+
+.card-info span:first-child { font-weight: 600; }
+.card-info span:last-child { color: var(--muted-color); }
+
+.carousel-nav { display: flex; gap: 1rem; }
+
+.nav-arrow {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+}
+
+.nav-arrow:hover { background: rgba(255, 255, 255, 0.1); }
+
+.side-title { align-self: flex-end; text-align: right; }
+
+@keyframes shine {
+    from { transform: translateX(-100%) rotate(45deg); }
+    to { transform: translateX(200%) rotate(45deg); }
+}
+
+.sr-only {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1200px) {
+    .main-product-3d { width: 100vw; height: 60vh; top: 46%; }
+    .main-title { font-size: 5rem; }
+    .side-title { font-size: 4.2rem; }
+    .nav { display: none; }
+    .hero-right { width: 420px; }
+}
+
+@media (max-width: 900px) {
+    .header { padding: 1rem 5%; }
+    .logo { font-size: 1.2rem; }
+    .contact-btn { padding: 0.65rem 1.1rem; font-size: 0.8rem; }
+
+    .hero { padding: 0 5%; padding-top: 4.2rem; }
+    .hero-content { display: block; }
+
+    .hero-left { padding: 0.6rem 0 0; gap: 0.5rem; height: auto; max-width: none; }
+    .main-title { font-size: clamp(2.9rem, 15vw, 4.4rem); line-height: 0.85; }
+    .description { font-size: 0.86rem; line-height: 1.45; max-width: 13.5rem; }
+    .award-badge { display: none; }
+
+    .main-product-3d { width: 100vw; height: 45vh; height: 45dvh; top: 52%; transform: translate(-50%, -50%) rotate(12deg); }
+
+    .hero-right { display: block; width: auto; height: auto; padding: 0; }
+    .side-title { display: none; }
+    .product-carousel {
+        position: fixed; left: 0; right: 0;
+        bottom: calc(9.9rem + env(safe-area-inset-bottom));
+        align-items: center; z-index: 150;
+    }
+    .carousel-nav { display: none; }
+    .carousel-cards { gap: 0.4rem; }
+    .card {
+        width: auto; padding: 0.5rem 0.95rem; border-radius: 100px; gap: 0;
+        background: rgba(0, 0, 0, 0.28);
+    }
+    .card img, .card-info span:last-child { display: none; }
+    .card-info { font-size: 0.8rem; }
+    .card.active { background: var(--pink); color: var(--on-pink); }
+
+    .cta-group {
+        position: fixed; left: 5%; right: 5%;
+        bottom: calc(1rem + env(safe-area-inset-bottom));
+        align-items: stretch; gap: 0.7rem; z-index: 150;
+    }
+    .formats { gap: 0.4rem; }
+    .format { flex: 1; min-width: 0; padding: 0.5rem 0.4rem; background: rgba(0, 0, 0, 0.28); }
+    .primary-btn { width: 100%; justify-content: space-between; background: rgba(0, 0, 0, 0.62); }
+
+    .b1 { top: 30%; left: -6%; width: 120px; height: 120px; }
+    .b3 { top: 22%; left: 68%; width: 130px; height: 130px; }
+    .b4 { top: 27%; left: 66%; width: 80px; height: 80px; }
+    .b6 { top: 56%; left: 74%; width: 100px; height: 100px; }
+    .b5 { top: 60%; left: 2%; width: 80px; height: 80px; }
+    .b7 { top: 40%; left: 80%; width: 56px; height: 56px; }
+    .l2 { width: 90px; height: 90px; }
+    .l4 { width: 80px; height: 80px; }
+}
+
+@media (max-width: 900px) and (max-height: 640px) {
+    .description { display: none; }
+    .main-product-3d { height: 46vh; top: 44%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-center { animation: fadeIn 0.6s ease-out forwards; }
+    #bubbles-container { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div id="bubbles-container"></div>
+
+<header class="header">
+    <div class="logo">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="16" cy="16" r="14.5" stroke="currentColor" stroke-width="2" />
+            <path d="M16 8c3.3 4.2 5 6.8 5 10a5 5 0 0 1-10 0c0-3.2 1.7-5.8 5-10z" fill="currentColor" />
+        </svg>
+        <span>Coco.P Infusion</span>
+    </div>
+    <nav class="nav glass" aria-label="Choisir un goût">
+        <button class="nav-item active" data-flavor="nature">Bissap nature</button>
+        <button class="nav-item" data-flavor="menthe">Bissap menthe</button>
+        <button class="nav-item" data-flavor="gnamakou">Gnamakou</button>
+    </nav>
+    <a class="contact-btn" id="contact-link" href="https://wa.me/212607078328" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.500a8.500 8.500 0 0 1-12.600 7.400L3 20.500l1.700-5.100A8.500 8.500 0 1 1 21 11.500z"/></svg>
+        WhatsApp
+    </a>
+</header>
+
+<main class="hero">
+    <div class="hero-content">
+
+        <!-- Floating leaves (far background) -->
+        <div class="leaves-container" aria-hidden="true">
+            <model-viewer class="leaf l1" src="assets/menthe.glb" environment-image="neutral" exposure="1.0" interaction-prompt="none" camera-orbit="45deg 75deg 105%"></model-viewer>
+            <model-viewer class="leaf l2" src="assets/menthe.glb" environment-image="neutral" exposure="1.0" interaction-prompt="none" camera-orbit="-30deg 60deg 105%"></model-viewer>
+            <model-viewer class="leaf l3" src="assets/menthe.glb" environment-image="neutral" exposure="1.0" interaction-prompt="none" camera-orbit="120deg 85deg 105%"></model-viewer>
+            <model-viewer class="leaf l4" src="assets/menthe.glb" environment-image="neutral" exposure="1.0" interaction-prompt="none" camera-orbit="10deg 45deg 105%"></model-viewer>
+        </div>
+
+        <!-- Left column -->
+        <div class="hero-left">
+            <h1 class="main-title large-animation-1">
+                <span class="outline">Coco.P</span><br>
+                Infusion
+            </h1>
+            <p class="description">
+                <strong id="flavor-line">Bissap nature</strong>, fait maison. <br>
+                Livraison gratuite à Tanger, <br>
+                commande directe sur WhatsApp.
+            </p>
+            <div class="cta-group">
+                <div class="formats" role="group" aria-label="Choisir un format">
+                    <button class="format active" data-format="0"><span class="size">0,5 L</span><span class="price">10 dh</span></button>
+                    <button class="format" data-format="1"><span class="size">1 L</span><span class="price">17 dh</span></button>
+                    <button class="format" data-format="2"><span class="size">5 L</span><span class="price">80 dh</span></button>
+                </div>
+                <a class="primary-btn" id="order-link" href="https://wa.me/212607078328" target="_blank" rel="noopener">
+                    <span class="btn-label">Commander sur WhatsApp<small id="order-summary">Bissap nature · 0,5 L · 10 dh</small></span>
+                    <span class="plus-icon" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                    </span>
+                </a>
+            </div>
+            <div class="award-badge">
+                <div class="award-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.800" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z" />
+                        <circle cx="7.500" cy="17.500" r="1.800" />
+                        <circle cx="17.500" cy="17.500" r="1.800" />
+                    </svg>
+                </div>
+                <div class="award-text">
+                    <span class="award-title">LIVRAISON GRATUITE</span>
+                    <span class="award-subtitle">À TANGER UNIQUEMENT</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Background floating elements (behind the bottle) -->
+        <div class="berries-container-bg" aria-hidden="true">
+            <model-viewer class="berry b7" src="assets/hibiscus.glb" environment-image="neutral" exposure="1.0" interaction-prompt="none" camera-orbit="-20deg 110deg 105%"></model-viewer>
+            <model-viewer class="berry b8" src="assets/hibiscus.glb" environment-image="neutral" exposure="1.0" interaction-prompt="none" camera-orbit="160deg 45deg 105%"></model-viewer>
+            <model-viewer class="berry b9" src="assets/hibiscus.glb" environment-image="neutral" exposure="1.0" interaction-prompt="none" camera-orbit="45deg 20deg 105%"></model-viewer>
+        </div>
+
+        <!-- Center product (the 3D bottle) -->
+        <div class="hero-center">
+            <model-viewer id="product-model" src="assets/bouteille_coco_p.glb" alt="Bouteille de bissap Coco.P Infusion en 3D"
+                shadow-intensity="0" environment-image="neutral" exposure="1.25" loading="eager"
+                interaction-prompt="none" camera-orbit="0deg 90deg 380%" field-of-view="30deg"
+                class="main-product-3d">
+            </model-viewer>
+        </div>
+
+        <!-- Foreground floating elements (above text and bottle) -->
+        <div class="berries-container" aria-hidden="true">
+            <model-viewer class="berry b1" src="assets/hibiscus.glb" environment-image="neutral" exposure="1.2" interaction-prompt="none" camera-orbit="45deg 120deg 105%"></model-viewer>
+            <model-viewer class="berry b2" src="assets/hibiscus.glb" environment-image="neutral" exposure="1.2" interaction-prompt="none" camera-orbit="-120deg 45deg 105%"></model-viewer>
+            <model-viewer class="berry b3" src="assets/hibiscus.glb" environment-image="neutral" exposure="1.2" interaction-prompt="none" camera-orbit="200deg 90deg 105%"></model-viewer>
+            <model-viewer class="berry b4" src="assets/hibiscus.glb" environment-image="neutral" exposure="1.2" interaction-prompt="none" camera-orbit="10deg 20deg 105%"></model-viewer>
+            <model-viewer class="berry b5" src="assets/hibiscus.glb" environment-image="neutral" exposure="1.2" interaction-prompt="none" camera-orbit="-45deg 160deg 105%"></model-viewer>
+            <model-viewer class="berry b6" src="assets/hibiscus.glb" environment-image="neutral" exposure="1.2" interaction-prompt="none" camera-orbit="80deg 75deg 105%"></model-viewer>
+        </div>
+
+        <!-- Right column -->
+        <div class="hero-right">
+            <div class="product-carousel">
+                <div class="carousel-cards" role="group" aria-label="Choisir un goût">
+                    <button class="card active" data-flavor="nature">
+                        <img src="assets/carte_bissap.png" alt="">
+                        <span class="card-info">
+                            <span>Bissap nature</span>
+                            <span>dès 10 dh</span>
+                        </span>
+                    </button>
+                    <button class="card" data-flavor="menthe">
+                        <img src="assets/carte_bissap.png" alt="">
+                        <span class="card-info">
+                            <span>Bissap menthe</span>
+                            <span>dès 10 dh</span>
+                        </span>
+                    </button>
+                    <button class="card" data-flavor="gnamakou">
+                        <img src="assets/carte_gnamakou.png" alt="">
+                        <span class="card-info">
+                            <span>Gnamakou</span>
+                            <span>dès 10 dh</span>
+                        </span>
+                    </button>
+                </div>
+                <div class="carousel-nav">
+                    <button class="nav-arrow" id="prev-flavor" aria-label="Goût précédent">←</button>
+                    <button class="nav-arrow" id="next-flavor" aria-label="Goût suivant">→</button>
+                </div>
+            </div>
+            <h2 class="side-title large-animation-1" id="side-title">
+                <span class="outline" id="side-1">Bissap</span><br>
+                <span id="side-2">Nature</span>
+            </h2>
+        </div>
+
+    </div>
+</main>
+
+<svg style="position: absolute; width: 0; height: 0; opacity: 0; pointer-events: none;" aria-hidden="true">
+    <filter id="frosted">
+        <feTurbulence type="fractalNoise" baseFrequency="0.0125" numOctaves="3" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="80" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+</svg>
+<div style="display: none;">
+    <!-- Preload floating models to avoid lag during switch -->
+    <model-viewer src="assets/hibiscus.glb"></model-viewer>
+    <model-viewer src="assets/menthe.glb"></model-viewer>
+    <model-viewer src="assets/gingembre.glb"></model-viewer>
+    <model-viewer src="assets/ananas.glb"></model-viewer>
+</div>
+
+<script>
+const WHATSAPP = '212607078328';
+const FORMATS = [
+    { size: '0,5 L', price: 10 },
+    { size: '1 L', price: 17 },
+    { size: '5 L', price: 80 }
+];
+const FLAVORS = {
+    nature: {
+        name: 'Bissap nature', title: ['Bissap', 'Nature'],
+        colors: { inner: '#b3123a', mid: '#6b0a22', outer: '#1c0309' },
+        liquid: '#3a0613', foam: '#c9285f', theme: '#6b0a22',
+        models: ['hibiscus']
+    },
+    menthe: {
+        name: 'Bissap menthe', title: ['Bissap', 'Menthe'],
+        colors: { inner: '#1c8a55', mid: '#0c4d2f', outer: '#03150d' },
+        liquid: '#3a0613', foam: '#c9285f', theme: '#0c4d2f',
+        models: ['menthe', 'menthe', 'hibiscus']
+    },
+    gnamakou: {
+        name: 'Gnamakou', title: ['Gnamakou', 'Ananas'],
+        colors: { inner: '#d6951b', mid: '#86540a', outer: '#1d1203' },
+        liquid: '#dcc06a', foam: '#f1e3ae', theme: '#86540a',
+        models: ['gingembre', 'ananas']
+    }
+};
+const ORDER = ['nature', 'menthe', 'gnamakou'];
+
+const modelViewer = document.querySelector('#product-model');
+const berriesFG = document.querySelector('.berries-container');
+const berriesBG = document.querySelector('.berries-container-bg');
+const leavesBG = document.querySelector('.leaves-container');
+const cards = document.querySelectorAll('.card');
+const navItems = document.querySelectorAll('.nav-item');
+const formatBtns = document.querySelectorAll('.format');
+const isSmall = window.matchMedia('(max-width: 900px)').matches;
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// Lighter scene on phones: fewer floating models
+if (isSmall) {
+    document.querySelectorAll('.b2, .b8, .b9, .l1, .l3').forEach(el => el.remove());
+}
+const allBerries = document.querySelectorAll('.berry');
+
+let isSwitching = false;
+let switchSpin = 0;
+let currentFlavor = 'nature';
+let currentFormat = 0;
+
+function modelFor(flavor, i) {
+    const list = FLAVORS[flavor].models;
+    return 'assets/' + list[i % list.length] + '.glb';
+}
+
+// Liquid + foam colours live on two named materials of the bottle
+function applyLiquid(flavor) {
+    if (!modelViewer.model) return;
+    const f = FLAVORS[flavor];
+    modelViewer.model.materials.forEach(material => {
+        if (material.name === 'Liquide') material.pbrMetallicRoughness.setBaseColorFactor(f.liquid);
+        if (material.name === 'Mousse') material.pbrMetallicRoughness.setBaseColorFactor(f.foam);
+    });
+}
+
+modelViewer.addEventListener('load', () => applyLiquid(currentFlavor));
+
+function updateOrder() {
+    const f = FLAVORS[currentFlavor];
+    const fmt = FORMATS[currentFormat];
+    const text = `Bonjour Coco.P Infusion, je voudrais commander : ${f.name}, ${fmt.size} (${fmt.price} dh). Livraison à Tanger.`;
+    document.getElementById('order-link').href = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`;
+    document.getElementById('order-summary').textContent = `${f.name} · ${fmt.size} · ${fmt.price} dh`;
+    document.getElementById('flavor-line').textContent = f.name;
+}
+
+function setActive(flavor) {
+    cards.forEach(c => c.classList.toggle('active', c.dataset.flavor === flavor));
+    navItems.forEach(n => n.classList.toggle('active', n.dataset.flavor === flavor));
+}
+
+function requestFlavor(flavor) {
+    if (isSwitching || flavor === currentFlavor) return;
+    setActive(flavor);
+    switchFlavor(flavor);
+}
+
+cards.forEach(card => card.addEventListener('click', () => requestFlavor(card.dataset.flavor)));
+navItems.forEach(item => item.addEventListener('click', () => requestFlavor(item.dataset.flavor)));
+document.getElementById('prev-flavor').addEventListener('click', () => {
+    requestFlavor(ORDER[(ORDER.indexOf(currentFlavor) + ORDER.length - 1) % ORDER.length]);
+});
+document.getElementById('next-flavor').addEventListener('click', () => {
+    requestFlavor(ORDER[(ORDER.indexOf(currentFlavor) + 1) % ORDER.length]);
+});
+
+formatBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        currentFormat = Number(btn.dataset.format);
+        formatBtns.forEach(b => b.classList.toggle('active', b === btn));
+        updateOrder();
+    });
+});
+
+function switchFlavor(flavor) {
+    if (isSwitching) return;
+    isSwitching = true;
+    currentFlavor = flavor;
+    updateOrder();
+    const body = document.body;
+    const berries = document.querySelectorAll('.berry');
+    const heroCenter = document.querySelector('.hero-center');
+    const f = FLAVORS[flavor];
+
+    // 1. Background Animation
+    gsap.to(body, {
+        '--bg-inner': f.colors.inner,
+        '--bg-mid': f.colors.mid,
+        '--bg-outer': f.colors.outer,
+        duration: 1.5,
+        ease: 'power2.inOut'
+    });
+    const themeMeta = document.querySelector('meta[name="theme-color"]');
+    if (themeMeta) themeMeta.setAttribute('content', f.theme);
+
+    // Side title cross-fade
+    gsap.to('#side-title', {
+        opacity: 0, y: 20, duration: 0.45, ease: 'power2.in',
+        onComplete: () => {
+            document.getElementById('side-1').textContent = f.title[0];
+            document.getElementById('side-2').textContent = f.title[1];
+            gsap.to('#side-title', { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' });
+        }
+    });
+
+    // 2. Bottle Spin Animation (360 spin + blur, colour swap at the peak, back settle)
+    const spinObj = { val: 0, blur: 0 };
+    gsap.to(spinObj, {
+        val: 360,
+        blur: reducedMotion ? 0 : 15,
+        duration: 0.6,
+        ease: "power2.in",
+        onUpdate: () => {
+            switchSpin = spinObj.val;
+            modelViewer.style.filter = `blur(${spinObj.blur}px)`;
+        },
+        onComplete: () => {
+            // SWAP at peak
+            applyLiquid(flavor);
+
+            gsap.to(spinObj, {
+                val: 720,
+                blur: 0,
+                duration: 1.5,
+                ease: "back.out(0.7)",
+                onUpdate: () => {
+                    switchSpin = spinObj.val;
+                    modelViewer.style.filter = `blur(${spinObj.blur}px)`;
+                },
+                onComplete: () => {
+                    switchSpin = 0;
+                    modelViewer.style.filter = 'none';
+                }
+            });
+        }
+    });
+
+    // 3. Floating elements "Hide & Reveal" with Dynamic Positioning
+    let completedBerries = 0;
+    const spread = isSmall ? 70 : 200;
+    berries.forEach((berry, i) => {
+        const bW = berry.offsetWidth / 2;
+        const bH = berry.offsetHeight / 2;
+        const centerX = (window.innerWidth / 2 - berry.offsetLeft - bW);
+        const centerY = (window.innerHeight / 2 - berry.offsetTop - bH);
+
+        const startAngle = parseFloat(berry.dataset.angle) || 0;
+        const currentBaseX = parseFloat(berry.dataset.baseX) || 0;
+        const currentBaseY = parseFloat(berry.dataset.baseY) || 0;
+
+        // New random target position
+        const nextBaseX = (Math.random() - 0.5) * spread;
+        const nextBaseY = (Math.random() - 0.5) * spread;
+
+        gsap.set(berry, {
+            rotation: startAngle,
+            x: currentBaseX,
+            y: currentBaseY
+        });
+
+        const berryTl = gsap.timeline();
+
+        berryTl.to(berry, {
+            x: centerX,
+            y: centerY,
+            rotation: startAngle + 45,
+            scale: 0.1,
+            opacity: 0,
+            duration: 0.5,
+            ease: "power2.in",
+            onComplete: () => {
+                berry.src = modelFor(flavor, i);
+                heroCenter.style.zIndex = 50;
+            }
+        })
+        .to(berry, {
+            duration: 0.3
+        })
+        .to(berry, {
+            onStart: () => {
+                heroCenter.style.zIndex = 1;
+            },
+            x: nextBaseX,
+            y: nextBaseY,
+            rotation: startAngle + 90,
+            scale: 1,
+            opacity: 1,
+            duration: 0.9,
+            ease: "back.out(1.5)",
+            clearProps: 'opacity',
+            onComplete: () => {
+                berry.dataset.angle = startAngle + 90;
+                berry.dataset.baseX = nextBaseX;
+                berry.dataset.baseY = nextBaseY;
+                berry.dataset.rx = 0;
+                berry.dataset.ry = 0;
+
+                completedBerries++;
+                if (completedBerries === berries.length) {
+                    isSwitching = false;
+                }
+            }
+        });
+    });
+}
+
+// Track floating element states for smoothing
+allBerries.forEach(b => {
+    b.dataset.rx = 0; b.dataset.ry = 0; b.dataset.angle = Math.random() * 360;
+    b.dataset.baseX = 0; b.dataset.baseY = 0;
+    b.dataset.targetRx = 0; b.dataset.targetRy = 0;
+});
+
+let mouse = { x: 0, y: 0, px: -9999, py: -9999 };
+let currentMouse = { x: 0, y: 0 };
+
+window.addEventListener('mousemove', (e) => {
+    mouse.x = (e.clientX / window.innerWidth) - 0.5;
+    mouse.y = (e.clientY / window.innerHeight) - 0.5;
+    mouse.px = e.clientX;
+    mouse.py = e.clientY;
+});
+
+// Touch: the finger plays the role of the cursor
+function onTouch(e) {
+    const t = e.touches[0];
+    if (!t) return;
+    mouse.x = (t.clientX / window.innerWidth) - 0.5;
+    mouse.y = (t.clientY / window.innerHeight) - 0.5;
+    mouse.px = t.clientX;
+    mouse.py = t.clientY;
+}
+window.addEventListener('touchstart', onTouch, { passive: true });
+window.addEventListener('touchmove', onTouch, { passive: true });
+window.addEventListener('touchend', () => { mouse.px = -9999; mouse.py = -9999; mouse.x = 0; mouse.y = 0; }, { passive: true });
+
+// Tilting the phone tilts the bottle
+let tiltActive = false;
+function onTilt(e) {
+    if (e.gamma === null || e.beta === null) return;
+    if (mouse.px > -9000) return; // a finger is down: it wins
+    mouse.x = Math.max(-0.5, Math.min(0.5, e.gamma / 60));
+    mouse.y = Math.max(-0.5, Math.min(0.5, (e.beta - 45) / 70));
+}
+function enableTilt() {
+    if (tiltActive || !('DeviceOrientationEvent' in window)) return;
+    const start = () => { tiltActive = true; window.addEventListener('deviceorientation', onTilt); };
+    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+        DeviceOrientationEvent.requestPermission().then(state => { if (state === 'granted') start(); }).catch(() => {});
+    } else {
+        start();
+    }
+}
+if (isSmall && !reducedMotion) {
+    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        window.addEventListener('click', enableTilt, { once: true }); // iOS asks on a tap
+    } else {
+        enableTilt();
+    }
+}
+
+function animate() {
+    const time = Date.now() * 0.001;
+    // Smoothly interpolate current mouse to target mouse
+    currentMouse.x += (mouse.x - currentMouse.x) * 0.05;
+    currentMouse.y += (mouse.y - currentMouse.y) * 0.05;
+
+    // Tilt the bottle + add switch spin
+    modelViewer.cameraOrbit = `${(currentMouse.x * 40) + switchSpin}deg ${90 + (currentMouse.y * 20)}deg 380%`;
+
+    // Update parallax containers - Always
+    const par = isSmall ? 0.4 : 1;
+    berriesFG.style.transform = `translate(${currentMouse.x * 60 * par}px, ${currentMouse.y * 60 * par}px)`;
+    berriesBG.style.transform = `translate(${currentMouse.x * -30 * par}px, ${currentMouse.y * -30 * par}px)`;
+    leavesBG.style.transform = `translate(${currentMouse.x * -15 * par}px, ${currentMouse.y * -15 * par}px)`;
+
+    // Update each floating element with its own smoothing and float - ONLY IF NOT SWITCHING
+    if (!isSwitching) {
+        const radius = isSmall ? 220 : 400;
+        const strength = isSmall ? -45 : -80;
+        allBerries.forEach((berry, i) => {
+            const berryRect = berry.getBoundingClientRect();
+            const berryX = berryRect.left + berryRect.width / 2;
+            const berryY = berryRect.top + berryRect.height / 2;
+
+            const diffX = mouse.px - berryX;
+            const diffY = mouse.py - berryY;
+            const distance = Math.sqrt(diffX * diffX + diffY * diffY);
+
+            let targetRx = 0, targetRy = 0, speedMult = 1;
+
+            if (distance < radius && distance > 0.001) {
+                const force = (radius - distance) / radius;
+                targetRx = (diffX / distance) * force * strength;
+                targetRy = (diffY / distance) * force * strength;
+                speedMult = 1 + force * 5;
+            }
+
+            // Lerp repulsion values
+            let rx = parseFloat(berry.dataset.rx) || 0;
+            let ry = parseFloat(berry.dataset.ry) || 0;
+            let angle = parseFloat(berry.dataset.angle) || 0;
+            let baseX = parseFloat(berry.dataset.baseX) || 0;
+            let baseY = parseFloat(berry.dataset.baseY) || 0;
+
+            rx += (targetRx - rx) * 0.1;
+            ry += (targetRy - ry) * 0.1;
+            angle += 0.2 * speedMult;
+
+            berry.dataset.rx = rx;
+            berry.dataset.ry = ry;
+            berry.dataset.angle = angle;
+
+            // Floating effect
+            const dur = [5, 7, 6, 8, 5.5, 6.5, 9, 11, 10][i % 9];
+            const phase = (time + i * 0.7) * (Math.PI * 2 / dur);
+            const floatY = Math.sin(phase) * 15;
+            const floatAngle = Math.cos(phase) * 6;
+
+            berry.style.transform = `translate(calc(${rx + baseX}px), calc(${ry + baseY}px + ${floatY}px)) rotate(calc(${angle}deg + ${floatAngle}deg))`;
+        });
+    }
+
+    // Update leaves with float - ALWAYS
+    document.querySelectorAll('.leaf').forEach((leaf, i) => {
+        const dur = 10 + i * 2;
+        const phase = (time + i * 1.2) * (Math.PI * 2 / dur);
+        const floatY = Math.sin(phase) * 20;
+        const floatX = Math.cos(phase * 0.5) * 15;
+        const floatAngle = Math.sin(phase * 0.3) * 15;
+        leaf.style.transform = `translate(${floatX}px, ${floatY}px) rotate(${floatAngle}deg)`;
+    });
+
+    requestAnimationFrame(animate);
+}
+
+updateOrder();
+animate();
+
+// Bubbles Generator
+const bubblesContainer = document.getElementById('bubbles-container');
+function createBubble() {
+    if (!bubblesContainer || document.hidden) return;
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble-img';
+    const size = Math.random() * 20 + 10 + 'px';
+    bubble.style.width = size;
+    bubble.style.height = size;
+    bubble.style.left = Math.random() * 100 + '%';
+    bubble.style.bottom = '-50px';
+    bubble.style.opacity = Math.random() * 0.4 + 0.2;
+
+    const duration = Math.random() * 6 + 4;
+    bubble.style.animation = `floatUpImg ${duration}s linear forwards`;
+
+    bubblesContainer.appendChild(bubble);
+    setTimeout(() => bubble.remove(), duration * 1000);
+}
+if (!reducedMotion) setInterval(createBubble, isSmall ? 700 : 400);
+</script>
+</body>
+</html>
